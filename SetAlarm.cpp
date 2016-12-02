@@ -10,9 +10,9 @@ using namespace std;
 int main()
 {
 	time_t t;
-    char tstr[20];
-    time(&t);
-    strftime( tstr, sizeof(tstr), "%Y %m %d %H %M", localtime(&t) ); // get current time
+	char tstr[20];
+	time(&t);
+	strftime( tstr, sizeof(tstr), "%Y %m %d %H %M", localtime(&t) ); // get current time
 	int Y, Mth, D, H, M;
 	stringstream ss;
 	ss << tstr;
