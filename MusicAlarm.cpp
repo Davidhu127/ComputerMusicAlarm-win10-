@@ -21,13 +21,13 @@ int main()
 		namelist.push_back(line);
 	}
 	mt19937 mt(time(NULL));
-	string cmd = "C:\\PROGRA~2\\WINDOW~3\\wmplayer.exe "; // windows media player exe
+	string cmd = "C:\\PROGRA~2\\WINDOW~3\\wmplayer.exe "; // windows media player (different PC may have diff path)
 	string name = namelist[ mt() % (namelist.size()) ];
 	cmd.append(format_8_3("D:\\David\\Music\\folderA\\" + name));
-	// NirCmd is a powerful tool (google to download it)
+	
 	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 65535"); // set system volume to maximum
 	system(cmd.c_str());
-	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 6553");
+	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 6553"); // NirCmd is a powerful tool (google it to download!)
 	fin.close();
 	system("DEL D:\\namelist.selfdef");
 	return 0;
