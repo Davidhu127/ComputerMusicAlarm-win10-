@@ -73,5 +73,5 @@ string format_8_3(const string& addr){
 	purepath.append(str.substr(pos1, pos2-pos1));
 	fin.close();
 	system("DEL /Q D:\\result.r83fmt");
-    return purepath;
+    	return purepath;
 }
