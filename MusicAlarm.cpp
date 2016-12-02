@@ -26,8 +26,10 @@ int main()
 	cmd.append(format_8_3("D:\\David\\Music\\folderA\\" + name));
 	
 	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 65535"); // set system volume to maximum
+	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 1 /f"); // set WMP to loop mode
 	system(cmd.c_str());
 	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 6553"); // NirCmd is a powerful tool (google it to download!)
+	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 0 /f");
 	fin.close();
 	system("DEL D:\\namelist.selfdef");
 	return 0;
