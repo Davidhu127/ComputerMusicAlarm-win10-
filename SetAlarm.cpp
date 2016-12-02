@@ -6,6 +6,7 @@
 #include <time.h>
 using namespace std;
 // 設定鬧鐘UI：會根據現在時間計算還剩多少小時，具有記憶功能，並且能透過 schtasks 直接更改工作排程器的執行(喚醒)時間
+// Please run this program with RUN WITH ADMIN, otherwise schtasks command won't work.
 
 int main()
 {
