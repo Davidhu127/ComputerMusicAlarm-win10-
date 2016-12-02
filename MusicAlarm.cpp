@@ -23,8 +23,8 @@ int main()
 	string cmd = "C:\\PROGRA~2\\WINDOW~3\\wmplayer.exe "; // windows media player exe
 	string name = namelist[ mt() % (namelist.size()) ];
 	cmd.append(format_8_3("D:\\David\\Music\\folderA\\" + name));
-	
-	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 65535"); // NirCmd is a powerful tool (google to download it)
+	// NirCmd is a powerful tool (google to download it)
+	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 65535"); // set system volume to maximum
 	system(cmd.c_str());
 	system("D:\\David\\OtherProgram\\nircmd-x64\\nircmd.exe setsysvolume 6553");
 	fin.close();
