@@ -7,6 +7,8 @@
 using namespace std;
 // 隨機播放音樂程式，會根據資料夾(D:\\David\\Music\\folderA) 裡面歌單，隨機取出一首播放
 // If your folder's name has blanks in it, then you will need to convert them to format 8.3 also. Use DIR/X command to view their 8.3 format.
+// Please CLOSE MEDIA PLAYER FIRST to turn off the alarm, this app will close up itself after that.
+//   (System Volumn and Loop Mode won't restore if it's in the other way around.)
 
 // convert file name to format 8.3
 string format_8_3(const string& addr);
