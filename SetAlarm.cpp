@@ -25,7 +25,7 @@ int main()
 	fin >> rH >> rM;
 	fin.close();
 	int tmph = (rH >= H) ? rH-H : rH+24-H;
-	int tmpm = ((rM > M) ? rM-M : (tmph--, rM+60-M))/6;  // comma operator
+	int tmpm = ((rM >= M) ? rM-M : (tmph--, rM+60-M))/6;  // comma operator
 	cout << "Current alarm: " << rH << ':' << rM << "   " << tmph <<'.'<< tmpm << " hours left\n";
 	char c;
 	do {
