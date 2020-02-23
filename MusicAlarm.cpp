@@ -5,77 +5,77 @@
 #include <random>
 #include <time.h>
 using namespace std;
-// 隨機播放音樂程式，會根據資料夾(D:\\David\\Music\\folderA) 裡面歌單，隨機取出一首播放
-// If your folder's name has blanks in it, then you will need to convert them to format 8.3 also. Use DIR/X command to view their 8.3 format.
-// Please CLOSE MEDIA PLAYER FIRST to turn off the alarm, this app will close up itself after that.
-//   (System Volumn and Loop Mode won't restore if it's in the other way around.)
+/*
+	A Music Alarm that will pick a song randomly from the Music Folder and play
+		it with Windows Media Player. Written by davidhcefx, 2016.12.02, revised in 2020.02.
 
-// convert file name to format 8.3
+	* Please ensure that:
+	  - There is no non-music files under the Music Folder.
+	  - There is no sub-directories within the Music Folder.
+
+	* In order to close it, PLEASE CLOSE MEDIA PLAYER FIRST!!
+	  This app will close up itself after that. (otherwise, system volumn wouldn't restore)
+*/
+
+
+string Music_Folder = "C:\\Users\\David\\Music\\Songs";
+string Windows_Media_Player = "C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe";
+// Optional: If you have installed nircmd, then we could turn the volume to maximum!
+string Nircmd = "C:\\OtherPrograms\\nircmd-x64\\nircmd.exe";
+
 string format_8_3(const string& addr);
 
 int main()
 {
-	system("DIR /B D:\\David\\Music\\folderA > D:\\namelist.selfdef"); // cmd command: get namelist
-	ifstream fin("D:\\namelist.selfdef");
-	vector<string> namelist;
+	// Get music list
+	system("CD %TEMP%");
+	system(("DIR /B \"" + Music_Folder + "\"> .\\music.list").c_str());
+	ifstream fin(".\\music.list");
+	vector<string> musiclist;
 	string line;
 	while (getline(fin, line)){
-		namelist.push_back(line);
+		musiclist.push_back(line);
 	}
-	mt19937 mt(time(NULL));
-	string cmd = "C:\\PROGRA~2\\WINDOW~3\\wmplayer.exe "; // windows media player (different PC may have diff path)
-	string name = namelist[ mt() % (namelist.size()) ];
-	cmd.append(format_8_3("D:\\David\\Music\\folderA\\" + name));
-	
-	system("D:\\David\\OtherPrograms\\nircmd-x64\\nircmd.exe setsysvolume 65535"); // set system volume to maximum
-	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 1 /f"); // set WMP to loop mode
-	system(cmd.c_str());
-	system("D:\\David\\OtherPrograms\\nircmd-x64\\nircmd.exe setsysvolume 6553"); // NirCmd is a powerful tool (google it to download !)
-	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 0 /f");
 	fin.close();
-	system("DEL D:\\namelist.selfdef");
+	// Pick one randomly
+	mt19937 mt(time(NULL));
+	if (Music_Folder.back() != '\\') {
+		Music_Folder.push_back('\\');
+	}
+	string cmd = format_8_3(Windows_Media_Player);
+	cmd += " \"" + Music_Folder + musiclist[ mt() % (musiclist.size()) ] + "\"";
+	// Turn the volume to maximum
+	bool hasNir = (system(format_8_3(Nircmd).c_str()) == 0) ? true : false;
+	if (hasNir) {
+		system((Nircmd + " setsysvolume 65535").c_str());
+	}
+	// Enable Loop Mode
+	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 1 /f");
+	cout << "PLEASE CLOSE THE MEDIA PLAYER FIRST!!\nThis window will close up itself.\n";
+	system(cmd.c_str());
+	if (hasNir) {
+		system((Nircmd + " setsysvolume 6553").c_str());
+	}
+	// Disable Loop Mode
+	system("reg add \"HKCU\\Software\\Microsoft\\MediaPlayer\\Preferences\" /v \"ModeLoop\" /t REG_DWORD /d 0 /f");
+	system("DEL .\\music.list");
 	return 0;
 }
 
 string format_8_3(const string& addr){
 	/*
-		Format 8.3 converter
-		2016.12.02
-		Davidhu127
-		Please #include <fstream>, <cstdlib>
-		Please provide absolute file path, eg. "D:\\folder\\the file.pdf"
+		Format 8.3 Converter (v2) by davidhcefx, 2020.2.24.
 	*/
-	if (addr[1]!=':' || addr[2]!='\\'){
-		cerr << "Error: please provide absolute file path\n";
-		return "";
-	}
-	int pos1 = addr.rfind('\\') +1;
-	int pos2 = addr.find(' ', pos1);
-	if (pos2 == -1){  // no need to transform to format 8.3
-		return addr;
-	}
-	string purepath {addr.substr(0, pos1)};
-	string str = "DIR /X ";
-	str.append(purepath);
-	str.append(addr.substr(pos1, pos2-pos1)); // first part of the name
-	str.append("* > D:\\result.r83fmt");
-	system(str.c_str());
+	system("CD %TEMP%");
+	ofstream fout("fmt83.bat");
+	fout << "@echo off\n";
+	fout << "echo %~s1%\n";
+	fout.close();
+	system(("fmt83.bat \"" + addr + "\"> result.fmt83").c_str());
 
-	ifstream fin("D:\\result.r83fmt");
-	string name = addr.substr(pos1, addr.size()-pos1);
-	pos2 = -1;
-	while (getline(fin, str)){
-		if ((pos2 = str.rfind(name)) != -1) break;
-	}
-	if (pos2 == -1){
-		cerr << "Error while: DIR/X [path] > D:\\result.r83fmt, please check the address: "<<addr<<"\n";
-		return "";
-	}
-	pos2--;  // at ' '
-	pos1 = str.rfind(' ', pos2-1);
-	pos1++;  // at first word
-	purepath.append(str.substr(pos1, pos2-pos1));
+	string line;
+	ifstream fin("result.fmt83");
+	getline(fin, line);
 	fin.close();
-	system("DEL /Q D:\\result.r83fmt");
-    	return purepath;
+	return line;
 }
