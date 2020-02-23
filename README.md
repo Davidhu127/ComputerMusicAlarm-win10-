@@ -6,7 +6,8 @@ Wake up the computer and plays a music randomly in the morning!
 **SetAlarm.cpp** is the top program, with which users can set up the desired alarm time.
  * It memorizes the previous alarm setting through writting/reading data to/from a file.
  * After getting the time from standard input, it runs a windows-cmd command `schtasks /Change` to set the invoking time of the task in Task Scheduler.
- * At the determined time, the PC will wake up and run **MusicAlarm.cpp**. (To wake PC up, Scheduler must have the highest admin power) 
+ * At the determined time, the PC will wake up and run **MusicAlarm.cpp**.
+ * Please note that you have to create a new task "runAlarm" under the folder "MusicAlarm" in the Scheduler first. This task must have the [highest admin power(https://davidhu0903ex3.pixnet.net/blog/post/453551861-%5b%e9%99%a4%e9%8c%af%5d-%e5%b7%a5%e4%bd%9c%e6%8e%92%e7%a8%8b%e5%99%a8---%e8%87%aa%e5%8b%95%e5%96%9a%e9%86%92%e5%9f%b7%e8%a1%8c-%280x41301%29%280x80) in order to wake PC up.
  
 ![Snapshot 01](/01.png)
 
